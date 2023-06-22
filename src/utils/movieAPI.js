@@ -1,47 +1,123 @@
-// import axios from 'axios';
-import { API_KEY,  BASE_URL} from 'constants';
+import axios from 'axios';
+import { API_KEY, BASE_URL } from 'constants';
 
-// import { getImagePosterPath } from 'utils/defaultImage';
-
-
-
-// axios.defaults.baseURL = BASE_URL;
-// axios.defaults.headers.common['Authorization'] = `Bearer ${API_KEY}`;
+axios.defaults.baseURL = BASE_URL;
+axios.defaults.headers.common['Authorization'] = `Bearer ${API_KEY}`;
 
 // -------------------------------------------------
-async function fetchMovies(url = '', config = {}) {
-  const response = await fetch(url, config);
-  return response.ok
-    ? await response.json()
-    : Promise.reject(new Error('Not Found'));
-};
+export async function getMovieCast({ id, signal }) {
+  try {
+    const response = await axios.get(`movie/${id}/credits`, {
+      signal,
+    });
+    if (!response) {
+      throw Error('We are sorry! There is no cast information about the movie');
+    }
 
-export function getTrendingMovies() {
-  return fetchMovies(
-    `${BASE_URL}/trending/movie/day?api_key=${API_KEY}`
-  );
-};
+    return response.data.cast;
+  } catch (error) {
+    if (error.name === 'CanceledError') {
+      return null;
+    }
+    if (error.response || error.request) {
+      throw Error('There is no server response. Try later again!');
+    } else {
+      throw error;
+    }
+  }
+}
 
-export function getMovies(query) {
-  return fetchMovies(
-    `${BASE_URL}/search/movie?query=${query}&api_key=${API_KEY}&language=en-US&page=1&include_adult=false`
-  )
-};
+// -------------------------------------------------
+export async function getMovieDetails({ id, signal }) {
+  try {
+    const response = await axios.get(`movie/${id}`, { signal });
+    if (!response) {
+      throw Error(
+        'We are sorry! There is no detailed information about the movie'
+      );
+    }
 
-export function getMovieDetails(movieId) {
-  return fetchMovies(
-    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`
-  )
-};
+    return response.data;
+  } catch (error) {
+    if (error.name === 'CanceledError') {
+      return null;
+    }
+    if (error.response || error.request) {
+      throw Error('There is no server response. Try later again!');
+    } else {
+      throw error;
+    }
+  }
+}
 
-export function getMovieCast(movieId) {
-  return fetchMovies(
-    `${BASE_URL}/movie/${movieId}/credits?api_key=${API_KEY}`
-  )
-};
+// -------------------------------------------------
+export async function getMovies({ page = 1, search = '', signal }) {
+  let params = {
+    page: page,
+    query: search,
+  };
 
-export function getReviews(movieId) {
-  return fetchMovies(
-    `${BASE_URL}/movie/${movieId}/reviews?api_key=${API_KEY}&page=1`
-  )
-};
+  try {
+    const response = await axios.get('search/movie', { params, signal });
+    if (response.data.results.length === 0) {
+      throw Error('There is no any match on your request!');
+    }
+
+    return response.data.results;
+  } catch (error) {
+    if (error.name === 'CanceledError') {
+      return [];
+    }
+    if (error.response || error.request) {
+      throw Error('There is no server response. Try later again!');
+    } else {
+      throw error;
+    }
+  }
+}
+
+// -------------------------------------------------
+export async function getReviews({ id, signal }) {
+  try {
+    const response = await axios.get(`movie/${id}/reviews`, { signal });
+    if (!response) {
+      throw Error('There is no cast information about the movie');
+    }
+
+    return response.data.results;
+  } catch (error) {
+    if (error.name === 'CanceledError') {
+      return null;
+    }
+    if (error.response || error.request) {
+      throw Error('There is no server response. Try later again!');
+    } else {
+      throw error;
+    }
+  }
+}
+
+// -------------------------------------------------
+export async function getTrendingMovies({ signal, page = 1 }) {
+  let params = {
+    page: page,
+  };
+
+  try {
+    const response = await axios.get('trending/movie/day', { params, signal });
+    if (response.data.results.length === 0) {
+      throw Error('There is no any match on your request!');
+    }
+
+    return response.data.results;
+  } catch (error) {
+    if (error.name === 'CanceledError') {
+      return [];
+    }
+    if (error.response || error.request) {
+      throw Error('There is no server response. Try later again!');
+    } else {
+      throw error;
+    }
+  }
+}
