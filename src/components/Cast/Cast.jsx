@@ -6,6 +6,7 @@ import { Box } from 'components/Box';
 import Loader from 'components/Loader';
 import { getMovieCast } from 'utils';
 import { Image, ImageWrap } from './Cast.styled';
+import img from '../../img/defaultImg.jpg';
 
 const STATUS = {
   idle: 0,
@@ -65,7 +66,7 @@ const Cast = () => {
           {cast.map(({ id, profile_path, name, character }) => (
             <li key={id}>
               <ImageWrap>
-                <Image src={BASE_URL + profile_path} alt={name} />
+                <Image src={profile_path ? BASE_URL + profile_path : img} width={300} height={450} alt={name} />
               </ImageWrap>
               <h3>{name}</h3>
               <p>

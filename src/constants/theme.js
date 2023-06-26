@@ -9,12 +9,12 @@ export const theme = {
   },
 
   colors: {
-    bgDark: '#8D8DAA',
-    bgMain: '#F7F5F2',
-    bgAccent: '#DFDFDE',
+    bgDark: '#2F4F4F',
+    bgMain: '#ccffe5',
+    bgAccent: '#FFE4C4',
 
-    linkActive: '#f56d91',
-    linkHover: 'white',
+    linkActive: '#00FF00',
+    linkHover: '#FFFF00',
     link: '#ededed',
     title: '#8D8DAA',
     subTitle: 'rgba (0,0,0,0.5)',
@@ -35,7 +35,7 @@ export const theme = {
   },
 
   borders: {
-    primary: `1px solid #8D8DAA`,
+    primary: `3px solid #8D8DAA`,
   },
 
   radii: {
